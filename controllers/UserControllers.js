@@ -5,8 +5,7 @@ const jwt = require('jsonwebtoken')
 class UserControllers {
     static async userRegister(req, res, next) {
         try {
-            const { name, role, password, email } = req.body;
-
+            const { name, role, password, email } = req.body || {};
             if (!name || !role || !password || !email) {
                 throw {
                     status: 400,
@@ -27,14 +26,15 @@ class UserControllers {
 
             let result = await User.create(inputUser)
 
-            res.status(201).json({ message: "Success" })
+            res.status(201).json({ message: "success" })
         } catch (error) {
             next(error)
         }
     }
+
     static async userLogin(req, res, next) {
         try {
-            const { email, password } = req.body
+            const { email, password } = req.body || {}
 
             if (!email || !password) {
                 throw { status: 400, message: "bad request" }
@@ -57,19 +57,37 @@ class UserControllers {
             }
 
             let userDecode = {
+                id: user.id,
                 name: user.name,
                 email: user.email,
                 role: user.role
             }
 
             const token = jwt.sign(userDecode, process.env.JWT_SECRET)
-
             res.status(200).json({
-                message: "success login",
+                message: "success",
                 data: {
                     token
                 }
             })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async getAllUsers(req, res, next) {
+        try {
+            let users = await User.findAll()
+            users = users.map(user => {
+                return {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role
+                }
+            })
+
+            res.status(200).json({ message: "success", data: users })
         } catch (error) {
             next(error)
         }

@@ -3,7 +3,7 @@ const { Product } = require("../models")
 class ProductControllers {
     static async addProduct(req, res, next) {
         try {
-            const { name, price } = req.body
+            const { name, price } = req.body || {}
 
             if (!name || !price) {
                 throw { status: 400, message: "name and price are required" }
@@ -16,7 +16,7 @@ class ProductControllers {
 
             let result = await Product.create(inputProduct)
 
-            res.status(201).json({ message: "Success" })
+            res.status(201).json({ message: "success" })
         } catch (error) {
             next(error)
         }
@@ -26,7 +26,7 @@ class ProductControllers {
         try {
             const products = await Product.findAll()
 
-            res.status(200).json({ message: "Success", data: products })
+            res.status(200).json({ message: "success", data: products })
         } catch (error) {
             next(error)
         }

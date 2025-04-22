@@ -12,7 +12,7 @@ async function authentication(req, res, next) {
         
         const user = await User.findOne({
             where: {
-                email: decode?.email
+                id: decode?.id
             }
         })
 
@@ -21,7 +21,6 @@ async function authentication(req, res, next) {
         }
 
         req.user = decode
-        
         next()
     } catch (error) {
         next(error)

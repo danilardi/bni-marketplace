@@ -1,21 +1,18 @@
 const route = require('express').Router();
-const PurchaseControllers = require('../controllers/PurchaseControllers');
-const authentication = require('../middlewares/authentication');
 const userRoutes = require('./userRoutes');
 const productRoutes = require('./productRoutes');
 const purchaseRoutes = require('./purchaseRoutes');
+const authentication = require('../middlewares/authentication');
 const authorization = require('../middlewares/authorization');
 
-route.get('/', authentication, authorization, (req, res) => {
+route.get('/', (req, res) => {
     res.status(200).json({
-        message: "success",
-        data: req?.user
+        message: "hi, CrackEarth is here!!",
     })
 })
 
 route.use(userRoutes);
 route.use('/products', productRoutes);
-route.use('/purchase', authentication, authorization, purchaseRoutes)
-
+route.use('/purchase', authentication, purchaseRoutes)
 
 module.exports = route;
